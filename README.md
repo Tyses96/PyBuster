@@ -44,7 +44,7 @@ http://givenhost:givenport/howdy.php
 
 It also returns http codes along side found URLs.
 
-Use of paths should be in the format "/dir/dir/wordlist.txt" for Linux and "dir\dir\dir\wordlist.txt" for Windows users.
+Use of paths should be in the format "/dir/dir/wordlist.txt" for Linux users and "dir\dir\dir\wordlist.txt" for Windows users.
 
 Put word lists and extension lists in lib\lists folder for ease of use.
 
