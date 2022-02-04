@@ -11,6 +11,7 @@ import requests
 
 ###### Initialising Variables ######
 
+version = "1.0.1"
 states = ["input", "searching", "results", "end"]
 targetUrl = ""
 targetPort = ""
@@ -18,13 +19,14 @@ currentState= "input"
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 wordlist = ""
 extensionlist = ""
-connected = False;
+connected = False
 url_count = 0
 finished_words = []
 finished_urls = []
 found_urls = []
 found_codes = []
-running = True;
+running = True
+log_count = 0
 
 
 
@@ -34,8 +36,7 @@ running = True;
 def bustTarget(url_list):
     for url in url_list:
         r = requests.get(url)
-#------------------------IMPORTANT: Take 404 out before actual use, testing purposes only--------------------------#
-        if r.status_code == 200 or r.status_code == 403 or r.status_code == 404:
+        if r.status_code !=404:
             found_urls.append(url)
             found_codes.append(r.status_code)
 
@@ -54,8 +55,6 @@ def iterateLists(word, ext, url):
     for i in finished_words:
         finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
 
-
-
 ###### Logic ######
 
 
@@ -71,35 +70,43 @@ while running:
         for line in logo.readlines():
             line.split()
             print(line)
-        print("------------------Welcome to PyBuster Version 1.0.0------------------")
-        print("[Type Exit at any time to leave]")
-
+        print("-----------------Welcome to PyBuster Version " + version + "------------------")
+        print("-------------------------[Type Exit to leave]---------------------------------")
+        print("-----------------[Read the README.txt file for more help]---------------------")
+#This if statements relates to logs. If a log has been made, it shows it here because if it shows it at the end
+#the confirmation for the log dissappears into the CLI
+        if(log_count > 0):
+            print("Log stored as " + logname + " in /PyBuster/logs")
         while connected == False:
-            print("Enter URL: ")
+            print("Enter target URL: ")
             targetUrl = input()
-            print(targetUrl.capitalize())
-            if targetUrl.capitalize() == "Exit":
-                currentState = states[3]
-                connected = True
-
-            #print("Enter port: ")
-            #targetPort = int(input())
-            targetPort = 8000
-            try:
-                s.connect((targetUrl, targetPort))
-                connected = True
-                print("Connection established...")
-            except:
-                print("Unable to connect to Host at " + targetUrl + ":" + str(targetPort))
-
-
-    #Making sure the user enters valid paths
-
+            if targetUrl.capitalize() != "Exit":
+                print("Enter target port for " + targetUrl + ": ")
+                targetPort = int(input())
+#Statically set target port for testing purposes, speeds up input process
+                #targetPort = 8000
+                try:
+                    s.connect((targetUrl, targetPort))
+                    connected = True
+                    print("Connection established...")
+                except:
+#Provides some detail on format for the user to follow if they're having troubles
+                        print("Unable to connect to Host at " + targetUrl + ":" + str(targetPort))
+                        print("Esnure URL format is >somewhere.com and is NOT >http//:somewhere.com")
+                        print("Common http ports include 80, 8000, 8080")
+                else:
+                    connected = True
+                    currentState = states[3]
+            else:
+                    connected = True
+                    currentState = states[3]
+#Making sure the user enters valid paths
         while wordlist == "" and currentState != states[3]:
             print("Enter wordlist path: ")
             try:
-                #wordlist = open(input())
-                wordlist = open("lib\lists\words.txt")
+                wordlist = open(input())
+# Statically set wordlist for testing purposes, speeds up input process
+                #wordlist = open("lib\lists\words.txt")
                 wordlist_raw = wordlist.readlines()
                 print("Loaded wordlist: " + wordlist.name)
             except:
@@ -109,8 +116,9 @@ while running:
         while extensionlist == "" and currentState != states[3]:
             print("Enter extentionlist path: ")
             try:
-                #extensionlist = open(input())
-                extensionlist = open("lib\lists\extensions.txt")
+                extensionlist = open(input())
+# Statically set extensionlist for testing purposes, speeds up input process
+                #extensionlist = open("lib\lists\extensions.txt")
                 extensionlist_raw = extensionlist.readlines()
                 print("Loaded extension list: " + extensionlist.name)
             except:
@@ -118,10 +126,9 @@ while running:
         if currentState != states[3]:
             currentState = states[1]
 
-    ## -- Searching stage -- ##
+## -- Searching stage -- ##
     while currentState == states[1]:
-
-    #Bannner for PyBuster outlining key details
+#Bannner for PyBuster outlining key details
 
         print("--------\nPyBuster\n--------")
         start_time = datetime.datetime.now()
@@ -129,24 +136,26 @@ while running:
         print("URL: " + targetUrl)
         print("Wordlist: " + wordlist.name)
         print("Extensionlist: " + extensionlist.name + "\n--------")
-        print("Words checking: " + str(len(wordlist_raw)) + " Extensions checking: " + str(len(extensionlist_raw))
-              + " Total URLs checking: " +str(len(wordlist_raw) * len(extensionlist_raw)))
-    #Merging the 2 lists
+        print("Words checking: " + str(len(wordlist_raw)) + "\nExtensions checking: " + str(len(extensionlist_raw))
+              + "\nTotal URLs checking: " +str(len(wordlist_raw) * len(extensionlist_raw)))
+        print("Busting... Please wait.")
+#Merging the 2 lists
         iterateLists(wordlist_raw, extensionlist_raw, targetUrl)
 
-    #Using the the merged lists to craft the url and then send the requests
+#Using the the merged lists to craft the url and then send the requests
         bustTarget(finished_urls)
         currentState = states[2]
 
+## -- Results stage -- ##
 
-    ## -- Results stage -- ##
-
-    #Display all found URLs
+#Display all found URLs
     while currentState == states[2]:
+        print("          |          ")
         for found in found_urls:
             count = 0
             print("     Found url: " + found + " - Status code: " + str(found_codes[count]))
             count = count+1
+        print("          |          ")
         end_time = datetime.datetime.now()
         print("-{STAT} End time: " + end_time.strftime(("%Y-%m-%d %H:%M:%S")))
         time_taken = end_time - start_time
@@ -154,25 +163,51 @@ while running:
         print("-{STAT} Total successful URLs: "  + str(len(found_urls)) + "/" + str(len(wordlist_raw) *
                                                                                   len(extensionlist_raw)))
 
-    #Clean up by closing all open connections to external sources.
+#Clean up by closing all open connections to external sources.
         s.close()
         wordlist.close()
         extensionlist.close()
         print("Connection closed")
 
-    #Test if user wants to do another PyBust
-        again = input("Bust new host? [y/n]").capitalize()
-        if again == "Y":
+#Test if user wants to do another PyBust, store the log or exit
+        again = input("[P] to PyBust new target - [L] to store as log - [E] to exit").capitalize()
+        if again == "P":
             connected = False;
             currentState = states[0]
             break;
-        elif again == "N":
+        elif again == "L":
+#Setting appropriate name and storing everything that was outputted to a .txt file in Pybuster/logs
+            logname = "PB log - " + start_time.strftime("%Y_%m_%d %H_%M_%S")
+            log = open("logs/" + logname + ".txt", 'w')
+            log.write("--------\nPyBuster\n--------")
+            log.write("\nStart time: " + start_time.strftime("%Y-%m-%d %H:%M:%S"))
+            log.write("\nURL: " + targetUrl)
+            log.write("\nWordlist: " + wordlist.name)
+            log.write("\nExtensionlist: " + extensionlist.name + "\n--------")
+            log.write("\nWords checking: " + str(len(wordlist_raw)) + "\nExtensions checking: " + str(len(extensionlist_raw))
+                  + "\nTotal URLs checking: " + str(len(wordlist_raw) * len(extensionlist_raw)))
+            log.write("\nBusting... Please wait.")
+            log.write("\n          |          ")
+            for found in found_urls:
+                count = 0
+                log.write("\n     Found url: " + found + " - Status code: " + str(found_codes[count]))
+                count = count + 1
+            log.write("\n          |          ")
+            log.write("\n-{STAT} End time: " + end_time.strftime(("%Y-%m-%d %H:%M:%S")))
+            log.write("\n-{STAT} Time taken: " + str(time_taken))
+            log.write("\n-{STAT} Total successful URLs: " + str(len(found_urls)) + "/" + str(len(wordlist_raw) *
+                                                                                       len(extensionlist_raw)))
+            log.close()
+            log_count = log_count + 1
+            connected = False;
+            currentState = states[0]
+        elif again == "E":
             finish = False;
             currentState = states[3]
             break;
         else:
             print("Incorrect input")
-    #Exit
+#Exit
     if(currentState == states[3]):
         print("Goodbye")
         running = False;
