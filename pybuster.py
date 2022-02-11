@@ -134,9 +134,12 @@ while running:
             else:
                 print("ver 2")
                 try:
-                    wordlistpath = path.relpath(input())
-                    with open(wordlistpath, 'r') as wordlist:
-                        wordlist_raw = wordlist.readlines()
+                    wordlistpath = path.relpath(raw_input())
+                    wordlist = open(wordlistpath)
+                    # Statically set wordlist for testing purposes, speeds up input process
+                    # wordlist = open("lib\lists\words.txt")
+                    wordlist_raw = wordlist.readlines()
+                    print("Loaded wordlist: " + wordlist.name)
                 except:
                     wordlist = ""
                     print("Incorrect file path, try again")
