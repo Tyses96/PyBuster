@@ -96,7 +96,7 @@ while running:
             print("Log stored as " + logname + " in " + slash + "PyBuster" + slash + "logs")
         while connected == False:
             print("Enter target URL: ")
-            targetUrl = input()
+            targetUrl = str(input())
             if targetUrl.capitalize() != "Exit":
                 print("Enter target port for " + targetUrl + ": ")
                 targetPort = int(input())
