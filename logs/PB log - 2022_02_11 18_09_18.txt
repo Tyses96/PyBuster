@@ -1,0 +1,18 @@
+--------
+PyBuster
+--------
+Start time: 2022-02-11 18:09:18
+URL: testingmcafeesites.com
+Wordlist: lib\lists\words.txt
+Extensionlist: lib\lists\extensions.txt
+--------
+Words checking: 4
+Extensions checking: 4
+Total URLs checking: 16
+Busting... Please wait.
+          |          
+     Found url: http://testingmcafeesites.com:80/index.html - Status code: 200
+          |          
+-{STAT} End time: 2022-02-11 18:09:23
+-{STAT} Time taken: 0:00:04.464066
+-{STAT} Total successful URLs: 1/16

@@ -2,6 +2,7 @@
 
 #Please view README for more information
 
+from os import path
 import sys
 import socket
 import datetime
@@ -28,8 +29,6 @@ found_urls = []
 found_codes = []
 running = True
 log_count = 0
-system = ""
-slash = ""
 pyversion = sys.version[0]
 specified_directory = ""
 ###### Functions ######
@@ -61,15 +60,6 @@ def iterateLists(word, ext, url):
         finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
 
 
-##Initialising what system the user is on and assinging correct forward/backslash for that OS
-system = platform.system()
-if system == "Windows":
-        slash = '\\'
-elif system == "Linux":
-        slash = '/'
-else:
-        slash = "error on filesystem type"
-
 
 ###### Logic ######
 
@@ -81,7 +71,7 @@ while running:
 
     while currentState == states[0]:
 ##Detects users OS to ensure correct res loaded
-        logo = open("lib" + slash + "p_res" + slash + "pybuster_logo.txt")
+        logo = open(path.relpath("lib/p_res/pybuster_logo.txt"))
         for line in logo.readlines():
             line.split()
             print(line)
@@ -91,7 +81,7 @@ while running:
 #This if statements relates to logs. If a log has been made, it shows it here because if it shows it at the end
 #the confirmation for the log dissappears into the CLI
         if(log_count > 0):
-            print("Log stored as " + logname + " in " + slash + "PyBuster" + slash + "logs")
+            print("Log stored as " + logname + " in :" + path.relpath("/PyBuster/logs"))
         while connected == False:
             print("Enter target URL: ")
 ##Different python versions require different inputs here, so check the users version and make sure the input URL is
@@ -126,24 +116,28 @@ while running:
         while wordlist == "" and currentState != states[3]:
             print("Enter wordlist path: ")
             try:
-                wordlist = open(input())
+                wordlistpath = path.relpath(input())
+                wordlist = open(wordlistpath)
 # Statically set wordlist for testing purposes, speeds up input process
                 #wordlist = open("lib\lists\words.txt")
                 wordlist_raw = wordlist.readlines()
                 print("Loaded wordlist: " + wordlist.name)
             except:
+                wordlist = ""
                 print("Incorrect file path, try again")
 
 
         while extensionlist == "" and currentState != states[3]:
             print("Enter extentionlist path: ")
             try:
-                extensionlist = open(input())
+                extensionlistpath = path.relpath(input())
+                extensionlist = open(extensionlistpath)
 # Statically set extensionlist for testing purposes, speeds up input process
                 #extensionlist = open("lib\lists\extensions.txt")
                 extensionlist_raw = extensionlist.readlines()
                 print("Loaded extension list: " + extensionlist.name)
             except:
+                extensionlist = ""
                 print("Incorrect file path, try again")
         if currentState != states[3]:
             currentState = states[1]
@@ -200,7 +194,7 @@ while running:
         elif again == "L":
 #Setting appropriate name and storing everything that was outputted to a .txt file in Pybuster/logs
             logname = "PB log - " + start_time.strftime("%Y_%m_%d %H_%M_%S")
-            log = open("logs/" + logname + ".txt", 'w')
+            log = open(path.relpath("logs/" + logname + ".txt"), 'w')
             log.write("--------\nPyBuster\n--------")
             log.write("\nStart time: " + start_time.strftime("%Y-%m-%d %H:%M:%S"))
             log.write("\nURL: " + targetUrl)
