@@ -60,13 +60,14 @@ def iterateLists(word, ext, url):
         finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
 
 
-def findFileSystem():
-    system = platform.system()
-    if system == "Windows":
+##Initialising what system the user is on and assinging correct forward/backslash for that OS
+system = platform.system()
+if system == "Windows":
+        print("we got here")
         slash = '\\'
-    elif system == "Linux":
+elif system == "Linux":
         slash = '/'
-    else:
+else:
         slash = "error on filesystem type"
 
 
@@ -82,7 +83,6 @@ while running:
 
     while currentState == states[0]:
 ##Detects users OS to ensure correct res loaded
-        findFileSystem()
         logo = open("lib" + slash + "p_res" + slash + "pybuster_logo.txt")
         for line in logo.readlines():
             line.split()
