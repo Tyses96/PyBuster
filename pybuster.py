@@ -31,7 +31,7 @@ log_count = 0
 system = ""
 slash = ""
 pyversion = sys.version[0]
-
+specified_directory = ""
 ###### Functions ######
 
 #Crafts the url needed and sends the GET request to server
@@ -49,6 +49,7 @@ def bustTarget(url_list):
 
 def iterateLists(word, ext, url):
     ext.append("")
+    url = url + specified_directory
     for line1 in ext:
         for line2 in word:
             x = line1
@@ -100,20 +101,26 @@ while running:
             else:
 ##This works with earlier python instalations
                 targetUrl = raw_input()
+            if targetUrl.find("/") > 0:
+##Is the user specifying a specific directory in the url? If so theres some work to do
+                splitdir = targetUrl.split("/")
+                predir = splitdir[0]
+                specified_directory = "/" + splitdir[1]
+                targetUrl = predir
             if targetUrl.capitalize() != "Exit":
                 print("Enter target port for " + targetUrl + ": ")
                 targetPort = int(input())
 #Statically set target port for testing purposes, speeds up input process
                 #targetPort = 8000
-                try:
-                    s.connect((targetUrl, targetPort))
-                    connected = True
-                    print("Connection established...")
-                except:
+            try:
+                s.connect((targetUrl, targetPort))
+                connected = True
+                print("Connection established...")
+            except:
 #Provides some detail on format for the user to follow if they're having troubles
-                        print("Unable to connect to Host at " + targetUrl + ":" + str(targetPort))
-                        print("Esnure URL format is >somewhere.com and is NOT >http//:somewhere.com")
-                        print("Common http ports include 80, 8000, 8080")
+                    print("Unable to connect to Host at " + targetUrl + ":" + str(targetPort))
+                    print("Esnure URL format is >somewhere.com and is NOT >http//:somewhere.com")
+                    print("Common http ports include 80, 8000, 8080")
 
 #Making sure the user enters valid paths
         while wordlist == "" and currentState != states[3]:
