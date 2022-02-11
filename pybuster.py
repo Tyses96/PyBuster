@@ -2,7 +2,7 @@
 
 #Please view README for more information
 
-
+import sys
 import socket
 import datetime
 import requests
@@ -30,7 +30,7 @@ running = True
 log_count = 0
 system = ""
 slash = ""
-
+pyversion = sys.version[0]
 
 ###### Functions ######
 
@@ -63,7 +63,6 @@ def iterateLists(word, ext, url):
 ##Initialising what system the user is on and assinging correct forward/backslash for that OS
 system = platform.system()
 if system == "Windows":
-        print("we got here")
         slash = '\\'
 elif system == "Linux":
         slash = '/'
@@ -72,8 +71,6 @@ else:
 
 
 ###### Logic ######
-
-
 
 
 ## -- Input stage -- ##
@@ -96,7 +93,13 @@ while running:
             print("Log stored as " + logname + " in " + slash + "PyBuster" + slash + "logs")
         while connected == False:
             print("Enter target URL: ")
-            targetUrl = str(input())
+##Different python versions require different inputs here, so check the users version and make sure the input URL is
+##formatted appropriately
+            if int(pyversion) > 2:
+                targetUrl = input()
+            else:
+##This works with earlier python instalations
+                targetUrl = raw_input()
             if targetUrl.capitalize() != "Exit":
                 print("Enter target port for " + targetUrl + ": ")
                 targetPort = int(input())
