@@ -136,7 +136,7 @@ while running:
         while extensionlist == "" and currentState != states[3]:
             print("Enter extentionlist path: ")
             try:
-                if pyversion > 2:
+                if int(pyversion) > 2:
 #Python 3 way of doing it
                     extensionlistpath = path.relpath(input())
                 else:
