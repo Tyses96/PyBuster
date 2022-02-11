@@ -46,12 +46,14 @@ def bustTarget(url_list):
 #Iterates through both the word list and extension list, appending the words together and crafting the URL
 
 def iterateLists(word, ext, url):
+    ext.append("")
     for line1 in ext:
         for line2 in word:
             x = line1
             y = line2
             z = y.strip()+x.strip()
             finished_words.append(z)
+
     for i in finished_words:
         finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
 
@@ -94,12 +96,7 @@ while running:
                         print("Unable to connect to Host at " + targetUrl + ":" + str(targetPort))
                         print("Esnure URL format is >somewhere.com and is NOT >http//:somewhere.com")
                         print("Common http ports include 80, 8000, 8080")
-                else:
-                    connected = True
-                    currentState = states[3]
-            else:
-                    connected = True
-                    currentState = states[3]
+
 #Making sure the user enters valid paths
         while wordlist == "" and currentState != states[3]:
             print("Enter wordlist path: ")
@@ -136,8 +133,8 @@ while running:
         print("URL: " + targetUrl)
         print("Wordlist: " + wordlist.name)
         print("Extensionlist: " + extensionlist.name + "\n--------")
-        print("Words checking: " + str(len(wordlist_raw)) + "\nExtensions checking: " + str(len(extensionlist_raw))
-              + "\nTotal URLs checking: " +str(len(wordlist_raw) * len(extensionlist_raw)))
+        print("Words checking: " + str(len(wordlist_raw)) + "\nExtensions checking: " + str(len(extensionlist_raw) + 1)
+              + "\nTotal URLs checking: " +str(len(wordlist_raw) * (len(extensionlist_raw) + 1)))
         print("Busting... Please wait.")
 #Merging the 2 lists
         iterateLists(wordlist_raw, extensionlist_raw, targetUrl)
@@ -204,7 +201,6 @@ while running:
         elif again == "E":
             finish = False;
             currentState = states[3]
-            break;
         else:
             print("Incorrect input")
 #Exit
