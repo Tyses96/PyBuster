@@ -116,39 +116,32 @@ while running:
         while wordlist == "" and currentState != states[3]:
             print("Enter wordlist path: ")
 #ABSOLUTELY STUPID CDOC IS ONLY PYTHON 2.7 SO WE HAVE TO CHECK FOR BACKWARDS COMPATIBILITY.
-
+            try:
 #Python 3 way of doing it
-            if int(pyversion) > 2:
-                print("ver 3")
-                try:
+                if int(pyversion) > 2:
                     wordlistpath = path.relpath(input())
-                    wordlist = open(wordlistpath)
+                else:
+#Python 2 way of doing it
+                    wordlistpath = path.relpath(raw_input())
+                wordlist = open(wordlistpath)
 # Statically set wordlist for testing purposes, speeds up input process
                     #wordlist = open("lib\lists\words.txt")
-                    wordlist_raw = wordlist.readlines()
-                    print("Loaded wordlist: " + wordlist.name)
-                except:
-                    wordlist = ""
-                    print("Incorrect file path, try again")
-#Python 2 way of doing it
-            else:
-                print("ver 2")
-                try:
-                    wordlistpath = path.relpath(raw_input())
-                    wordlist = open(wordlistpath)
-                    # Statically set wordlist for testing purposes, speeds up input process
-                    # wordlist = open("lib\lists\words.txt")
-                    wordlist_raw = wordlist.readlines()
-                    print("Loaded wordlist: " + wordlist.name)
-                except:
-                    wordlist = ""
-                    print("Incorrect file path, try again")
+                wordlist_raw = wordlist.readlines()
+                print("Loaded wordlist: " + wordlist.name)
+            except:
+                wordlist = ""
+                print("Incorrect file path, try again")
 
 
         while extensionlist == "" and currentState != states[3]:
             print("Enter extentionlist path: ")
             try:
-                extensionlistpath = path.relpath(input())
+                if pyversion > 2:
+#Python 3 way of doing it
+                    extensionlistpath = path.relpath(input())
+                else:
+#Python 2 way of doing it
+                    extensionlistpath = path.relpath(raw_input())
                 extensionlist = open(extensionlistpath)
 # Statically set extensionlist for testing purposes, speeds up input process
                 #extensionlist = open("lib\lists\extensions.txt")
