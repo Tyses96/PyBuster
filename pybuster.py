@@ -6,6 +6,7 @@
 import socket
 import datetime
 import requests
+import platform
 
 #State based application
 
@@ -27,7 +28,8 @@ found_urls = []
 found_codes = []
 running = True
 log_count = 0
-
+system = ""
+slash = ""
 
 
 ###### Functions ######
@@ -57,6 +59,17 @@ def iterateLists(word, ext, url):
     for i in finished_words:
         finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
 
+
+def findFileSystem():
+    system = platform.system()
+    if system == "Windows":
+        slash = '\\'
+    elif system == "Linux":
+        slash = '/'
+    else:
+        slash = "error on filesystem type"
+
+
 ###### Logic ######
 
 
@@ -68,7 +81,9 @@ def iterateLists(word, ext, url):
 while running:
 
     while currentState == states[0]:
-        logo = open("lib\p_res\pybuster_logo.txt")
+##Detects users OS to ensure correct res loaded
+        findFileSystem()
+        logo = open("lib" + slash + "p_res" + slash + "pybuster_logo.txt")
         for line in logo.readlines():
             line.split()
             print(line)
@@ -78,7 +93,7 @@ while running:
 #This if statements relates to logs. If a log has been made, it shows it here because if it shows it at the end
 #the confirmation for the log dissappears into the CLI
         if(log_count > 0):
-            print("Log stored as " + logname + " in /PyBuster/logs")
+            print("Log stored as " + logname + " in " + slash + "PyBuster" + slash + "logs")
         while connected == False:
             print("Enter target URL: ")
             targetUrl = input()
