@@ -48,7 +48,6 @@ def bustTarget(url_list):
 
 def iterateLists(word, ext, url):
     ext.append("")
-    url = url + specified_directory
     for line1 in ext:
         for line2 in word:
             x = line1
@@ -57,7 +56,7 @@ def iterateLists(word, ext, url):
             finished_words.append(z)
 
     for i in finished_words:
-        finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + i)
+        finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + specified_directory + i)
 
 
 
@@ -197,7 +196,11 @@ while running:
         print("Connection closed")
 
 #Test if user wants to do another PyBust, store the log or exit
-        again = input("[P] to PyBust new target - [L] to store as log - [E] to exit").capitalize()
+#Python 3 way of doing it
+        if int(pyversion) > 2:
+            again = input("[P] to PyBust new target - [L] to store as log - [E] to exit").capitalize()
+        else:
+            again = raw_input("[P] to PyBust new target - [L] to store as log - [E] to exit").capitalize()
         if again == "P":
             connected = False;
             currentState = states[0]
