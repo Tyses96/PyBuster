@@ -56,7 +56,7 @@ def iterateLists(word, ext, url):
             finished_words.append(z)
 
     for i in finished_words:
-        finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + specified_directory + i)
+        finished_urls.append("http://" + url + ":" + str(targetPort) + "/" + specified_directory + "/"  + i)
 
 
 
