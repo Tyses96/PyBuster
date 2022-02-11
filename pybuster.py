@@ -115,16 +115,31 @@ while running:
 #Making sure the user enters valid paths
         while wordlist == "" and currentState != states[3]:
             print("Enter wordlist path: ")
-            try:
-                wordlistpath = path.relpath(input())
-                wordlist = open(wordlistpath)
+#ABSOLUTELY STUPID CDOC IS ONLY PYTHON 2.7 SO WE HAVE TO CHECK FOR BACKWARDS COMPATIBILITY.
+
+#Python 3 way of doing it
+            if int(pyversion) > 2:
+                print("ver 3")
+                try:
+                    wordlistpath = path.relpath(input())
+                    wordlist = open(wordlistpath)
 # Statically set wordlist for testing purposes, speeds up input process
-                #wordlist = open("lib\lists\words.txt")
-                wordlist_raw = wordlist.readlines()
-                print("Loaded wordlist: " + wordlist.name)
-            except:
-                wordlist = ""
-                print("Incorrect file path, try again")
+                    #wordlist = open("lib\lists\words.txt")
+                    wordlist_raw = wordlist.readlines()
+                    print("Loaded wordlist: " + wordlist.name)
+                except:
+                    wordlist = ""
+                    print("Incorrect file path, try again")
+#Python 2 way of doing it
+            else:
+                print("ver 2")
+                try:
+                    wordlistpath = path.relpath(input())
+                    with open(wordlistpath, 'r') as wordlist:
+                        wordlist_raw = wordlist.readlines()
+                except:
+                    wordlist = ""
+                    print("Incorrect file path, try again")
 
 
         while extensionlist == "" and currentState != states[3]:
